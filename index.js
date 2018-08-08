@@ -25,8 +25,8 @@ app.get('/Citilogics/datalyzer', function (req, res) {
     number: 1
   }).then(({data, headers, status}) => {
     event.summary(data.description)
-    //event.start()
-    //event.end()
+    event.start(moment(data.created_at).startOf('day'))
+    event.end(moment(data.created_at).add(1, 'days').startOf('day'))
     cal.serve(res)
   }).catch((error) => {
     console.log("ERROR : " + error)
