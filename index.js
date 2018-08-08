@@ -1,15 +1,11 @@
 const ical = require('ical-generator');
 var express = require('express');
 var app = express()
-const cal = ical({domain: 'github.com', name: 'my first iCal'});
+const cal = ical({domain: 'github.com', name: 'GITHUB EVENT'});
 const moment = require('moment');
 const octokit = require('@octokit/rest')() // to query github
 
-const event = cal.createEvent({
-    start: moment(),
-    end: moment().add(1, 'hour'),
-    summary: 'Example Event',
-});
+const event = cal.createEvent({});
 
 octokit.authenticate({
   type: 'token',
@@ -25,8 +21,9 @@ app.get('/Citilogics/datalyzer', function (req, res) {
     number: 1
   }).then(({data, headers, status}) => {
     event.summary(data.description)
-    event.start(moment(data.created_at).startOf('day'))
-    event.end(moment(data.created_at).add(1, 'days').startOf('day'))
+    event.allDay('true')
+    event.start(moment(data.due_on).startOf('day'))
+    event.end(moment(data.due_on).add(1, 'days').startOf('day'))
     cal.serve(res)
   }).catch((error) => {
     console.log("ERROR : " + error)
