@@ -3,7 +3,7 @@ var app = require('express')();
 const moment = require('moment');
 const octokit = require('@octokit/rest')() // to query github
 const _ = require('underscore')
-let eventsObj = [] // empty array to hold all events
+
 
 octokit.authenticate({
   type: 'token',
@@ -15,20 +15,24 @@ app.get('/', function(req, res) {
   res.status(200).send('nothing to see here')
 })
 
-app.get('/CitiLogics/CRAP-EMS', function (req, res) {
-  console.log(new Date() + " accessing /Citilogics/CRAP-EMS")
+app.get('/:owner/:repo', function (req, res) {
+  console.log(req.params.owner)
+  let eventsObj = [] // empty array to hold all events
+  console.log(new Date() + " accessing /" + req.params.owner + "/" + req.params.repo)
   octokit.issues.getMilestones({
-    owner: 'Citilogics',
-    repo: 'CRAP-EMS',
+    owner: req.params.owner,
+    repo: req.params.repo,
     state: 'open'
   }).then(({data, headers, status}) => {
     _.each(data, (eventObj) => {
       let temp = {}
+      temp['summary'] = eventObj.title
       temp['start'] = moment(eventObj.due_on).startOf('day')
       temp['allDay'] = 'true'
-      temp['summary'] = data.description
+      temp['description'] = eventObj.description
       eventsObj = eventsObj.concat(temp)
     })
+    console.log(eventsObj);
     const cal = ical({
       name: 'GITHUB EVENTS',
       events: eventsObj
