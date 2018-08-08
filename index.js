@@ -18,6 +18,7 @@ octokit.authenticate({
 
 
 app.get('/Citilogics/datalyzer', function (req, res) {
+  console.log(new Date() + " accessing /Citilogics/datalyzer")
   octokit.issues.getMilestone({
     owner: 'Citilogics',
     repo: 'datalyzer',
@@ -33,4 +34,4 @@ app.get('/Citilogics/datalyzer', function (req, res) {
 
 })
 
-app.listen(3005, () => console.log('Example app listening on port 3005!'))
+app.listen(3005, () => console.log('listening on port 3005!'))
