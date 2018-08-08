@@ -1,11 +1,9 @@
 const ical = require('ical-generator');
-var express = require('express');
-var app = express()
-const cal = ical({domain: 'github.com', name: 'GITHUB EVENT'});
+var app = require('express')();
 const moment = require('moment');
 const octokit = require('@octokit/rest')() // to query github
-
-const event = cal.createEvent({});
+const _ = require('underscore')
+let eventsObj = [] // empty array to hold all events
 
 octokit.authenticate({
   type: 'token',
@@ -19,20 +17,25 @@ app.get('/', function(req, res) {
 
 app.get('/CitiLogics/CRAP-EMS', function (req, res) {
   console.log(new Date() + " accessing /Citilogics/CRAP-EMS")
-  octokit.issues.getMilestone({
+  octokit.issues.getMilestones({
     owner: 'Citilogics',
     repo: 'CRAP-EMS',
-    number: 1
+    state: 'open'
   }).then(({data, headers, status}) => {
-    event.summary(data.description)
-    event.allDay('true')
-    event.start(moment(data.due_on).startOf('day'))
-    event.end(moment(data.due_on).add(1, 'days').startOf('day'))
+    _.each(data, (eventObj) => {
+      let temp = {}
+      temp['start'] = moment(eventObj.due_on).startOf('day')
+      temp['allDay'] = 'true'
+      temp['summary'] = data.description
+      eventsObj = eventsObj.concat(temp)
+    })
+    const cal = ical({
+      name: 'GITHUB EVENTS',
+      events: eventsObj
+    })
     cal.serve(res)
   }).catch((error) => {
     console.log("ERROR : " + error)
   })
-
 })
-
 app.listen(3005, () => console.log('listening on port 3005!'))
