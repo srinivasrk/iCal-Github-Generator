@@ -34,7 +34,7 @@ app.get('/:owner/:repo', function (req, res) {
     })
     console.log(eventsObj);
     const cal = ical({
-      name: 'GITHUB EVENTS',
+      name: 'GITHUB: '+ req.params.repo,
       events: eventsObj
     })
     cal.serve(res)
