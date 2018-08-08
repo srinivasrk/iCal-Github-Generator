@@ -18,7 +18,7 @@ app.get('/', function(req, res) {
 })
 
 app.get('/CitiLogics/CRAP-EMS', function (req, res) {
-  console.log(new Date() + " accessing /Citilogics/datalyzer")
+  console.log(new Date() + " accessing /Citilogics/CRAP-EMS")
   octokit.issues.getMilestone({
     owner: 'Citilogics',
     repo: 'CRAP-EMS',
