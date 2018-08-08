@@ -14,6 +14,7 @@ octokit.authenticate({
 
 app.get('/', function(req, res) {
   console.log(new Date() + "accessing /")
+  res.status(200).send('nothing to see here')
 })
 
 app.get('/CitiLogics/CRAP-EMS', function (req, res) {
