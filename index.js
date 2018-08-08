@@ -12,12 +12,15 @@ octokit.authenticate({
   token: process.env.GITHUB_ACCESS_TOKEN
 })
 
+app.get('/', function(req, res) {
+  console.log(new Date() + "accessing /")
+})
 
-app.get('/Citilogics/datalyzer', function (req, res) {
+app.get('/CitiLogics/CRAP-EMS', function (req, res) {
   console.log(new Date() + " accessing /Citilogics/datalyzer")
   octokit.issues.getMilestone({
     owner: 'Citilogics',
-    repo: 'datalyzer',
+    repo: 'CRAP-EMS',
     number: 1
   }).then(({data, headers, status}) => {
     event.summary(data.description)
